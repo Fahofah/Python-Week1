@@ -153,7 +153,15 @@ class Library():
                 for n in range(len(self.memberList)):
                     if(self.memberList[n].reg==borrower):
                         self.memberList[n].borrowed.append(itemID)
-    
+                print('Item {0} checked out..'.format(self.itemList[itemID-1].title))
+    def showBorrowed(self):
+        memberReg=input('Enter the registration number of member to view borrowed items list\n')
+        memberReg=int(memberReg)-1
+        print('\nMember {0} has currently borrowed thes items:\n'.format(self.memberList[memberReg].name))
+        for i in range(len(self.itemList)):
+            if( self.itemList[i].id in self.memberList[memberReg].borrowed):
+                print('- ',self.itemList[i].title)
+
     def checkInItem(self):
         itemID=input('Enter id of the item to be checked in\n')
         itemID=int(itemID)
@@ -190,7 +198,27 @@ class Library():
             for y in range(w):
                 self.itemsFromFile[x][y]=tmp[y]
                 print(self.itemsFromFile[x][y])
+        fr.close()
 
+class UI():
+    def __init__(self):
+        self.exit=False
+        self.selection=-1
+
+    def selectFunction(self):
+        print('\nSelect a function to perform from the menu below: (To exit enter [e])')
+        print('\n1.Check Out Item\n2.Check In Item\n3.Add Item\n4.Remove Item\n5.Update Item\
+        \n6.Register Member\n7.Delete Member\n8.Update Member\n9.Display all item records\
+        \n0.Display all member records\n99.Export library items list into file\
+        \n98.Import items list from file to seperate repository')
+        function=input()
+        if(function=='e'):
+            self.exit=True
+            print('Logging off..')
+            self.selection=-1
+        elif(isinstance(int(function),int)): 
+            self.selection=int(function)
+        
 
 class Items(ABC):
     def __init__(self,id,title,inLibrary):
@@ -218,23 +246,6 @@ class Member():
         self.age=age
         self.borrowed=[]
 
-class UI():
-    def __init__(self):
-        self.exit=False
-        self.selection=-1
-
-    def selectFunction(self):
-        print('\nSelect a function to perform from the menu below: (To exit enter [e])')
-        print('\n1.Check Out Item\n2.Check In Item\n3.Add Item\n4.Remove Item\n5.Update Item\
-        \n6.Register Member\n7.Delete Member\n8.Update Member\n9.Display all item records\
-        \n0.Display all member records\n99.Export library items list into file\
-        \n98.Import items list from file to seperate repository')
-        function=input()
-        if(function=='e'):
-            self.exit=True
-            print('Logging off..')
-        else:   
-            self.selection=int(function)
 
 ui=UI()
 library=Library()
@@ -284,6 +295,9 @@ while True:
         pass
     elif (ui.selection==98):
         library.readItemsFromFile()
+        pass
+    elif (ui.selection==11):
+        library.showBorrowed()
         pass
     else:
         pass
